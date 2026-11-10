@@ -553,13 +553,18 @@ describe("createAuth: a sign-in that fails", () => {
     expect(auth.getState().error?.code).toBe("CODE_REFUSED");
   });
 
-  test("should report CODE_REFUSED for an account that is not a customer: the backend says no more", async () => {
+  test("should report NOT_A_CUSTOMER when the backend refuses a proven code for the account", async () => {
     const auth = h.create();
     const result = await h.signInAs(auth, { ...CUSTOMER, role: "ADMIN" });
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       ok: false,
-      error: { code: "CODE_REFUSED" },
+      error: {
+        code: "NOT_A_CUSTOMER",
+        message: "Programlara müşteri hesabıyla giriş yapılır.",
+      },
     });
+    expect(auth.getState().status).toBe("signed-out");
+    expect(h.hasStoredSession()).toBe(false);
   });
 
   test("should refuse a session for an account that is not a customer, and end it at the backend", async () => {

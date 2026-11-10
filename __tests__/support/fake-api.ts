@@ -8,7 +8,8 @@ import type { AddressInfo } from "node:net";
 //
 // - a one-time code lives 60 seconds, belongs to one challenge and one redirect address, and is
 //   consumed by the first exchange that names it, whatever the outcome;
-// - every refusal of an exchange is the same `400 DESKTOP_CODE_INVALID`;
+// - every refusal of an exchange is the same `400 DESKTOP_CODE_INVALID`, except an account that
+//   cannot sign in after a proven code: `403 DESKTOP_ACCOUNT_NOT_ALLOWED`;
 // - a malformed exchange (`400 VALIDATION_ERROR`) and a rate-limited one (`429` with
 //   `Retry-After`) do not consume the code;
 // - a refresh rotates the refresh token with no grace period: the old one answers
@@ -215,10 +216,19 @@ const startFakeApi = async (): Promise<FakeApi> => {
       user === undefined ||
       Date.now() >= issued.expiresAt ||
       challengeOf(body.codeVerifier) !== issued.codeChallenge ||
-      body.redirectUri !== issued.redirectUri ||
-      (isRoleChecked && user.role !== "CUSTOMER")
+      body.redirectUri !== issued.redirectUri
     ) {
       problem(response, 400, "DESKTOP_CODE_INVALID", "Giriş kodu geçersiz.");
+      return;
+    }
+    // A request that proved the code and its verifier learns why the account cannot sign in.
+    if (isRoleChecked && user.role !== "CUSTOMER") {
+      problem(
+        response,
+        403,
+        "DESKTOP_ACCOUNT_NOT_ALLOWED",
+        "Bu hesap programda oturum açamaz."
+      );
       return;
     }
     json(response, 200, openSession(user, userAgent));

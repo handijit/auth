@@ -7,6 +7,16 @@ and the package follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-11-10
+
+### Fixed
+
+- A sign-in with a staff or unverified account now ends with `NOT_A_CUSTOMER` instead of
+  `CODE_REFUSED`: the backend answers a proven code for such an account with
+  `403 DESKTOP_ACCOUNT_NOT_ALLOWED`, which is now read as such.
+- The note on refreshing describes the backend's short grace for a just-rotated refresh token;
+  one refresh still runs at a time.
+
 ## [1.0.1] - 2026-11-10
 
 ### Fixed
@@ -105,6 +115,7 @@ Where the backend's contract and the house documents were silent:
 - **The build is not minified** and keeps its comments, like
   `@handijit/electron`; the size budgets are measured on that output.
 
-[Unreleased]: https://github.com/handijit/auth/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/handijit/auth/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/handijit/auth/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/handijit/auth/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/handijit/auth/releases/tag/v1.0.0

@@ -303,8 +303,9 @@ const createAuth = (options: AuthOptions): Auth => {
     return adoption.kind === "adopted";
   };
 
-  // Single flight. The backend rotates the refresh token without a grace period: a second
-  // refresh in parallel would present a token the first has just retired and end the session.
+  // Single flight. The backend rotates the refresh token and accepts the retired one only once
+  // within a short grace period; two refreshes in parallel would still waste that one chance
+  // and could end the session, so one refresh runs at a time.
   const refreshOnce = (): Promise<boolean> => {
     refreshing ??= runRefresh().finally(() => {
       refreshing = null;

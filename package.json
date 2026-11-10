@@ -1,6 +1,6 @@
 {
   "name": "@handijit/auth",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Sign in with the browser for Han Dijit's Electron desktop programs: the RFC 8252 loopback and PKCE sign-in against the panel, the session kept in the operating system's secret store, the authenticated API client for the main process, and a typed IPC contract with React hooks for the renderer.",
   "author": "Ahmet ilhan <ahmetilhan.dev@gmail.com>",
   "license": "MIT",
