@@ -7,6 +7,14 @@ and the package follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-10
+
+### Fixed
+
+- The quick start no longer awaits `startApp` at the top level of an ES module main: Electron
+  emits `ready` only after the main module has finished evaluating, so the program hung at
+  start-up. It now calls `startApp(...).catch(...)`.
+
 ## [1.0.0] - 2026-11-10
 
 First release: "Sign in with the browser" for Han Dijit's Electron desktop
@@ -97,5 +105,6 @@ Where the backend's contract and the house documents were silent:
 - **The build is not minified** and keeps its comments, like
   `@handijit/electron`; the size budgets are measured on that output.
 
-[Unreleased]: https://github.com/handijit/auth/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/handijit/auth/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/handijit/auth/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/handijit/auth/releases/tag/v1.0.0

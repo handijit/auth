@@ -70,12 +70,15 @@ with these schemas on the main side; the renderer entry checks what it receives 
 import { join } from "node:path";
 import { createAuth } from "@handijit/auth/main";
 import { startApp } from "@handijit/electron/main";
+import { app } from "electron";
 import { contract } from "../shared/contract";
 
 // One per program, for the life of the process. Creating it does nothing yet.
 export const auth = createAuth({ product: "notlar" });
 
-await startApp({
+// No top-level `await`: Electron emits `ready` only after an ES module main has finished
+// evaluating, so awaiting the start-up here would wait forever.
+startApp({
   contract,
   handlers: ({ logger }) => ({
     ...auth.handlers,
@@ -93,6 +96,9 @@ await startApp({
   beforeWindow: (context) => {
     auth.attach(context);
   },
+}).catch((error: unknown) => {
+  console.error("The program could not start", error);
+  app.exit(1);
 });
 ```
 
